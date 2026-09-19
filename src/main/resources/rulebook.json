@@ -1,0 +1,791 @@
+{
+  "rulebookVersion": "1.0",
+  "sources": [
+    {
+      "id": "RFC 8247",
+      "title": "Algorithm Implementation Requirements and Usage Guidance for IKEv2",
+      "url": "https://www.rfc-editor.org/info/rfc8247",
+      "readBy": "full text"
+    },
+    {
+      "id": "RFC 8221",
+      "title": "Cryptographic Algorithm Implementation Requirements and Usage Guidance for ESP and AH",
+      "url": "https://www.rfc-editor.org/info/rfc8221",
+      "readBy": "summary table and excerpts only"
+    },
+    {
+      "id": "RFC 9395",
+      "title": "Deprecation of IKEv1 and Obsoleted Algorithms",
+      "url": "https://www.rfc-editor.org/info/rfc9395",
+      "readBy": "full text"
+    },
+    {
+      "id": "IANA IKEv2 Parameters",
+      "title": "Internet Key Exchange Version 2 (IKEv2) Parameters (registry updated 2026-07-16)",
+      "url": "https://www.iana.org/assignments/ikev2-parameters",
+      "readBy": "transform type 1-5 tables (all IDs and names in this rule book)"
+    }
+  ],
+  "policyNote": "RFC 8247 says its levels are implementation requirements and that the algorithms a deployment uses are dictated by its own security policy. This rule book turns those levels into an audit policy. The mapping, the severities and the thresholds below are project policy and can be tuned in this file.",
+  "classes": {
+    "FORBIDDEN": "MUST NOT, or deprecated by RFC 8247 / RFC 9395, or no confidentiality (NULL). Fails the rule.",
+    "DISCOURAGED": "SHOULD NOT, or weak by project policy. Fails the rule.",
+    "LEGACY": "Still permitted but being phased out (for example MUST- or short tags). Fails with LOW severity.",
+    "ACCEPTABLE": "MUST / SHOULD / MAY without security concerns. Passes."
+  },
+  "severityPoints": {
+    "CRITICAL": 40,
+    "HIGH": 25,
+    "MEDIUM": 10,
+    "LOW": 3
+  },
+  "thresholds": {
+    "minSymmetricKeyBits": 128,
+    "maxChildRekeySeconds": 28800,
+    "provisionalScoreBelowCoverage": 0.5
+  },
+  "preferred": {
+    "encryption": [
+      20,
+      28,
+      12
+    ],
+    "integrity": [
+      12,
+      14
+    ],
+    "prf": [
+      5,
+      7
+    ],
+    "dhGroup": [
+      14,
+      19,
+      31,
+      20,
+      15
+    ]
+  },
+  "transformTypeAliases": {
+    "ENCR": "encryption",
+    "INTEG": "integrity",
+    "PRF": "prf",
+    "D-H": "dhGroup",
+    "KE": "dhGroup",
+    "ESN": "esn",
+    "SN": "esn"
+  },
+  "algorithms": {
+    "encryption": [
+      {
+        "id": 1,
+        "name": "ENCR_DES_IV64",
+        "class": "FORBIDDEN",
+        "severity": "HIGH",
+        "basis": "RFC 9395: deprecated (IANA status)",
+        "aead": false,
+        "variableKeyLength": false
+      },
+      {
+        "id": 2,
+        "name": "ENCR_DES",
+        "class": "FORBIDDEN",
+        "severity": "CRITICAL",
+        "basis": "RFC 8247: MUST NOT; RFC 8221: MUST NOT; IANA: DEPRECATED",
+        "note": "Brute-forceable with off-the-shelf hardware (RFC 8247)",
+        "aead": false,
+        "variableKeyLength": false
+      },
+      {
+        "id": 3,
+        "name": "ENCR_3DES",
+        "class": "DISCOURAGED",
+        "severity": "HIGH",
+        "basis": "RFC 8247: MAY (downgraded from MUST-); RFC 8221: SHOULD NOT",
+        "note": "64-bit block cipher. Severity is project policy",
+        "aead": false,
+        "variableKeyLength": false
+      },
+      {
+        "id": 4,
+        "name": "ENCR_RC5",
+        "class": "FORBIDDEN",
+        "severity": "HIGH",
+        "basis": "RFC 9395: deprecated (IANA status)",
+        "aead": false,
+        "variableKeyLength": false
+      },
+      {
+        "id": 5,
+        "name": "ENCR_IDEA",
+        "class": "FORBIDDEN",
+        "severity": "HIGH",
+        "basis": "RFC 9395: deprecated (IANA status)",
+        "aead": false,
+        "variableKeyLength": false
+      },
+      {
+        "id": 6,
+        "name": "ENCR_CAST",
+        "class": "FORBIDDEN",
+        "severity": "HIGH",
+        "basis": "RFC 9395: deprecated (IANA status)",
+        "aead": false,
+        "variableKeyLength": false
+      },
+      {
+        "id": 7,
+        "name": "ENCR_BLOWFISH",
+        "class": "FORBIDDEN",
+        "severity": "HIGH",
+        "basis": "RFC 9395: deprecated (IANA status)",
+        "aead": false,
+        "variableKeyLength": false
+      },
+      {
+        "id": 8,
+        "name": "ENCR_3IDEA",
+        "class": "FORBIDDEN",
+        "severity": "HIGH",
+        "basis": "RFC 9395: deprecated (IANA status)",
+        "aead": false,
+        "variableKeyLength": false
+      },
+      {
+        "id": 9,
+        "name": "ENCR_DES_IV32",
+        "class": "FORBIDDEN",
+        "severity": "HIGH",
+        "basis": "RFC 9395: deprecated (IANA status)",
+        "aead": false,
+        "variableKeyLength": false
+      },
+      {
+        "id": 11,
+        "name": "ENCR_NULL",
+        "class": "FORBIDDEN",
+        "severity": "CRITICAL",
+        "basis": "RFC 8247: MUST NOT; IANA: not allowed in IKEv2",
+        "note": "In ESP this means no confidentiality (RFC 8221 keeps NULL only for authentication-only ESP)",
+        "aead": false,
+        "variableKeyLength": false
+      },
+      {
+        "id": 12,
+        "name": "ENCR_AES_CBC",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "RFC 8247: MUST (128/256-bit keys, 192 MAY); RFC 8221: MUST",
+        "aead": false,
+        "variableKeyLength": true
+      },
+      {
+        "id": 13,
+        "name": "ENCR_AES_CTR",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY); RFC 8221: MAY",
+        "note": "Not AEAD: must be combined with an integrity algorithm",
+        "aead": false,
+        "variableKeyLength": true
+      },
+      {
+        "id": 14,
+        "name": "ENCR_AES_CCM_8",
+        "class": "LEGACY",
+        "severity": "LOW",
+        "basis": "RFC 8247 / RFC 8221: SHOULD, for IoT only",
+        "note": "8-octet ICV (short tag)",
+        "aead": true,
+        "variableKeyLength": true
+      },
+      {
+        "id": 15,
+        "name": "ENCR_AES_CCM_12",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)",
+        "aead": true,
+        "variableKeyLength": true
+      },
+      {
+        "id": 16,
+        "name": "ENCR_AES_CCM_16",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)",
+        "aead": true,
+        "variableKeyLength": true
+      },
+      {
+        "id": 18,
+        "name": "ENCR_AES_GCM_8",
+        "class": "LEGACY",
+        "severity": "LOW",
+        "basis": "RFC 8247: MAY (8-octet ICV)",
+        "note": "Short tag",
+        "aead": true,
+        "variableKeyLength": true
+      },
+      {
+        "id": 19,
+        "name": "ENCR_AES_GCM_12",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "RFC 8247: MAY (12-octet ICV)",
+        "aead": true,
+        "variableKeyLength": true
+      },
+      {
+        "id": 20,
+        "name": "ENCR_AES_GCM_16",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "RFC 8247: SHOULD; RFC 8221: MUST",
+        "note": "Preferred choice",
+        "aead": true,
+        "variableKeyLength": true
+      },
+      {
+        "id": 21,
+        "name": "ENCR_NULL_AUTH_AES_GMAC",
+        "class": "FORBIDDEN",
+        "severity": "CRITICAL",
+        "basis": "IANA: not allowed in IKEv2",
+        "note": "Authentication only: no confidentiality",
+        "aead": false,
+        "variableKeyLength": false
+      },
+      {
+        "id": 23,
+        "name": "ENCR_CAMELLIA_CBC",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)",
+        "aead": false,
+        "variableKeyLength": true
+      },
+      {
+        "id": 24,
+        "name": "ENCR_CAMELLIA_CTR",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)",
+        "note": "Not AEAD: must be combined with an integrity algorithm",
+        "aead": false,
+        "variableKeyLength": true
+      },
+      {
+        "id": 25,
+        "name": "ENCR_CAMELLIA_CCM_8",
+        "class": "LEGACY",
+        "severity": "LOW",
+        "basis": "Not listed in RFC 8247 (defaults to MAY)",
+        "note": "8-octet ICV (short tag)",
+        "aead": true,
+        "variableKeyLength": true
+      },
+      {
+        "id": 26,
+        "name": "ENCR_CAMELLIA_CCM_12",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)",
+        "aead": true,
+        "variableKeyLength": true
+      },
+      {
+        "id": 27,
+        "name": "ENCR_CAMELLIA_CCM_16",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)",
+        "aead": true,
+        "variableKeyLength": true
+      },
+      {
+        "id": 28,
+        "name": "ENCR_CHACHA20_POLY1305",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "RFC 8247: SHOULD; RFC 8221: SHOULD",
+        "aead": true,
+        "variableKeyLength": false
+      }
+    ],
+    "integrity": [
+      {
+        "id": 1,
+        "name": "AUTH_HMAC_MD5_96",
+        "class": "FORBIDDEN",
+        "severity": "HIGH",
+        "basis": "RFC 8247: MUST NOT; IANA: DEPRECATED"
+      },
+      {
+        "id": 2,
+        "name": "AUTH_HMAC_SHA1_96",
+        "class": "LEGACY",
+        "severity": "LOW",
+        "basis": "RFC 8247: MUST- (still required, expected to be dropped)",
+        "note": "No practical HMAC-SHA1 break; flagged as legacy only"
+      },
+      {
+        "id": 3,
+        "name": "AUTH_DES_MAC",
+        "class": "FORBIDDEN",
+        "severity": "HIGH",
+        "basis": "RFC 8247: MUST NOT; IANA: DEPRECATED"
+      },
+      {
+        "id": 4,
+        "name": "AUTH_KPDK_MD5",
+        "class": "FORBIDDEN",
+        "severity": "HIGH",
+        "basis": "RFC 8247: MUST NOT; IANA: DEPRECATED"
+      },
+      {
+        "id": 5,
+        "name": "AUTH_AES_XCBC_96",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "RFC 8247: SHOULD for IoT, MAY otherwise"
+      },
+      {
+        "id": 6,
+        "name": "AUTH_HMAC_MD5_128",
+        "class": "FORBIDDEN",
+        "severity": "HIGH",
+        "basis": "RFC 9395: deprecated (IANA status)"
+      },
+      {
+        "id": 7,
+        "name": "AUTH_HMAC_SHA1_160",
+        "class": "FORBIDDEN",
+        "severity": "MEDIUM",
+        "basis": "RFC 9395: deprecated (IANA status)"
+      },
+      {
+        "id": 8,
+        "name": "AUTH_AES_CMAC_96",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      },
+      {
+        "id": 9,
+        "name": "AUTH_AES_128_GMAC",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY); RFC 8221: MAY"
+      },
+      {
+        "id": 10,
+        "name": "AUTH_AES_192_GMAC",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      },
+      {
+        "id": 11,
+        "name": "AUTH_AES_256_GMAC",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      },
+      {
+        "id": 12,
+        "name": "AUTH_HMAC_SHA2_256_128",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "RFC 8247: MUST"
+      },
+      {
+        "id": 13,
+        "name": "AUTH_HMAC_SHA2_384_192",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      },
+      {
+        "id": 14,
+        "name": "AUTH_HMAC_SHA2_512_256",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "RFC 8247: SHOULD"
+      }
+    ],
+    "prf": [
+      {
+        "id": 1,
+        "name": "PRF_HMAC_MD5",
+        "class": "FORBIDDEN",
+        "severity": "HIGH",
+        "basis": "RFC 8247: MUST NOT; IANA: DEPRECATED"
+      },
+      {
+        "id": 2,
+        "name": "PRF_HMAC_SHA1",
+        "class": "LEGACY",
+        "severity": "LOW",
+        "basis": "RFC 8247: MUST- (still required, expected to be dropped)",
+        "note": "No practical HMAC-SHA1 break; flagged as legacy only"
+      },
+      {
+        "id": 3,
+        "name": "PRF_HMAC_TIGER",
+        "class": "FORBIDDEN",
+        "severity": "MEDIUM",
+        "basis": "RFC 9395: deprecated (IANA status)"
+      },
+      {
+        "id": 4,
+        "name": "PRF_AES128_XCBC",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "RFC 8247: SHOULD for IoT, MAY otherwise"
+      },
+      {
+        "id": 5,
+        "name": "PRF_HMAC_SHA2_256",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "RFC 8247: MUST"
+      },
+      {
+        "id": 6,
+        "name": "PRF_HMAC_SHA2_384",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      },
+      {
+        "id": 7,
+        "name": "PRF_HMAC_SHA2_512",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "RFC 8247: SHOULD+"
+      },
+      {
+        "id": 8,
+        "name": "PRF_AES128_CMAC",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      }
+    ],
+    "dhGroup": [
+      {
+        "id": 1,
+        "name": "768-bit MODP Group",
+        "class": "FORBIDDEN",
+        "severity": "CRITICAL",
+        "basis": "RFC 8247: MUST NOT; IANA: DEPRECATED",
+        "note": "Breakable within hours on cheap hardware (RFC 8247)"
+      },
+      {
+        "id": 2,
+        "name": "1024-bit MODP Group",
+        "class": "DISCOURAGED",
+        "severity": "HIGH",
+        "basis": "RFC 8247: SHOULD NOT",
+        "note": "RFC 8247 expects it to become MUST NOT"
+      },
+      {
+        "id": 5,
+        "name": "1536-bit MODP Group",
+        "class": "DISCOURAGED",
+        "severity": "MEDIUM",
+        "basis": "RFC 8247: SHOULD NOT",
+        "note": "Narrow security margin (RFC 8247)"
+      },
+      {
+        "id": 14,
+        "name": "2048-bit MODP Group",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "RFC 8247: MUST"
+      },
+      {
+        "id": 15,
+        "name": "3072-bit MODP Group",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY); larger than group 14"
+      },
+      {
+        "id": 16,
+        "name": "4096-bit MODP Group",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY); larger than group 14"
+      },
+      {
+        "id": 17,
+        "name": "6144-bit MODP Group",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY); larger than group 14"
+      },
+      {
+        "id": 18,
+        "name": "8192-bit MODP Group",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY); larger than group 14"
+      },
+      {
+        "id": 19,
+        "name": "256-bit random ECP group",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "RFC 8247: SHOULD"
+      },
+      {
+        "id": 20,
+        "name": "384-bit random ECP group",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      },
+      {
+        "id": 21,
+        "name": "521-bit random ECP group",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      },
+      {
+        "id": 22,
+        "name": "1024-bit MODP Group with 160-bit Prime Order Subgroup",
+        "class": "FORBIDDEN",
+        "severity": "CRITICAL",
+        "basis": "RFC 8247: MUST NOT; IANA: DEPRECATED"
+      },
+      {
+        "id": 23,
+        "name": "2048-bit MODP Group with 224-bit Prime Order Subgroup",
+        "class": "DISCOURAGED",
+        "severity": "MEDIUM",
+        "basis": "RFC 8247: SHOULD NOT",
+        "note": "Unpublished seeds, small subgroup; RFC 8247 expects MUST NOT later"
+      },
+      {
+        "id": 24,
+        "name": "2048-bit MODP Group with 256-bit Prime Order Subgroup",
+        "class": "DISCOURAGED",
+        "severity": "MEDIUM",
+        "basis": "RFC 8247: SHOULD NOT",
+        "note": "Unpublished seeds, small subgroup; RFC 8247 expects MUST NOT later"
+      },
+      {
+        "id": 25,
+        "name": "192-bit Random ECP Group",
+        "class": "DISCOURAGED",
+        "severity": "MEDIUM",
+        "basis": "Project policy (security strength), not an RFC requirement; verify against NIST SP 800-57"
+      },
+      {
+        "id": 26,
+        "name": "224-bit Random ECP Group",
+        "class": "LEGACY",
+        "severity": "LOW",
+        "basis": "Project policy (security strength), not an RFC requirement; verify against NIST SP 800-57"
+      },
+      {
+        "id": 27,
+        "name": "brainpoolP224r1",
+        "class": "LEGACY",
+        "severity": "LOW",
+        "basis": "Project policy (security strength), not an RFC requirement; verify against NIST SP 800-57"
+      },
+      {
+        "id": 28,
+        "name": "brainpoolP256r1",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      },
+      {
+        "id": 29,
+        "name": "brainpoolP384r1",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      },
+      {
+        "id": 30,
+        "name": "brainpoolP512r1",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      },
+      {
+        "id": 31,
+        "name": "Curve25519",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      },
+      {
+        "id": 32,
+        "name": "Curve448",
+        "class": "ACCEPTABLE",
+        "severity": null,
+        "basis": "Not listed in RFC 8247 (defaults to MAY)"
+      }
+    ]
+  },
+  "rules": [
+    {
+      "id": "VER-001",
+      "title": "IKEv1 must not be used",
+      "target": "IKE SA",
+      "reads": [
+        "ikeSas[].ikeVersion"
+      ],
+      "failWhen": "Major version is 1.",
+      "notEvaluatedWhen": "The capture contains no IKE SA.",
+      "severity": "HIGH",
+      "reference": "RFC 9395 (IKEv1 deprecated, moved to Historic)",
+      "recommendation": "Migrate the tunnel to IKEv2. Do not import IKEv1 crypto settings unchanged (RFC 9395)."
+    },
+    {
+      "id": "IKE-ENC-001",
+      "title": "IKE SA encryption algorithm",
+      "target": "IKE SA",
+      "reads": [
+        "ikeSas[].ikeSaInit.selected.encryption.id",
+        "ikeSas[].ikeSaInit.selected.encryption.keyLength"
+      ],
+      "failWhen": "Selected algorithm is FORBIDDEN, DISCOURAGED or LEGACY in the encryption table (severity from the table), or its key length is below thresholds.minSymmetricKeyBits.",
+      "notEvaluatedWhen": "IKE_SA_INIT is not in the capture (selected is null); the ID is not in the table; a variable-key-length cipher has no key length.",
+      "severity": "FROM_TABLE",
+      "reference": "RFC 8247 section 2.1; RFC 9395",
+      "recommendation": "Use ENCR_AES_GCM_16, ENCR_CHACHA20_POLY1305, or ENCR_AES_CBC with a 256-bit key plus HMAC-SHA2-256."
+    },
+    {
+      "id": "IKE-INT-001",
+      "title": "IKE SA integrity algorithm",
+      "target": "IKE SA",
+      "reads": [
+        "ikeSas[].ikeSaInit.selected.integrity",
+        "ikeSas[].ikeSaInit.selected.encryption (aead flag)"
+      ],
+      "failWhen": "Cipher is not AEAD and integrity is null or NONE (CRITICAL), or the integrity algorithm is FORBIDDEN or LEGACY in the integrity table (severity from the table).",
+      "notEvaluatedWhen": "IKE_SA_INIT is not in the capture; the encryption or integrity ID is not in the tables.",
+      "severity": "FROM_TABLE",
+      "reference": "RFC 8247 section 2.1 (non-AEAD ciphers MUST be used with an integrity algorithm) and 2.3",
+      "recommendation": "Use an AEAD cipher (no separate integrity), or HMAC-SHA2-256/512 with a non-AEAD cipher.",
+      "passNote": "An AEAD cipher with no integrity transform is correct and passes."
+    },
+    {
+      "id": "IKE-PRF-001",
+      "title": "IKE SA pseudorandom function",
+      "target": "IKE SA",
+      "reads": [
+        "ikeSas[].ikeSaInit.selected.prf.id"
+      ],
+      "failWhen": "Selected PRF is FORBIDDEN or LEGACY in the PRF table (severity from the table).",
+      "notEvaluatedWhen": "IKE_SA_INIT is not in the capture; the ID is not in the table.",
+      "severity": "FROM_TABLE",
+      "reference": "RFC 8247 section 2.2",
+      "recommendation": "Use PRF_HMAC_SHA2_256 or PRF_HMAC_SHA2_512."
+    },
+    {
+      "id": "IKE-DH-001",
+      "title": "IKE SA Diffie-Hellman group",
+      "target": "IKE SA",
+      "reads": [
+        "ikeSas[].ikeSaInit.selected.dhGroup.id"
+      ],
+      "failWhen": "Selected group is FORBIDDEN, DISCOURAGED or LEGACY in the DH table (severity from the table).",
+      "notEvaluatedWhen": "IKE_SA_INIT is not in the capture; the ID is not in the table.",
+      "severity": "FROM_TABLE",
+      "reference": "RFC 8247 section 2.4 and section 5 (the DH group is the most important parameter: breaking it later exposes all ESP traffic)",
+      "recommendation": "Use group 14 (2048-bit MODP) at minimum. Prefer group 19, 20, 31 or 15 and larger."
+    },
+    {
+      "id": "IKE-OFFER-001",
+      "title": "Weak algorithms offered in IKE_SA_INIT",
+      "target": "IKE SA",
+      "reads": [
+        "ikeSas[].ikeSaInit.offered[].transforms[]"
+      ],
+      "failWhen": "Any offered ENCR / INTEG / PRF / D-H transform is FORBIDDEN or DISCOURAGED (even if a strong one was selected). Evidence lists the offered IDs.",
+      "notEvaluatedWhen": "The initiator's request is not in the capture (offered is empty).",
+      "severity": "LOW",
+      "reference": "RFC 8247 (transcript collision attacks against weak hashes are cited as a reason to remove MD5); RFC 9395 section 6",
+      "recommendation": "Remove the listed algorithms from the proposal so a weak suite can never be negotiated.",
+      "passNote": "Only the initiator's offer is visible. Whether the responder would accept the weak options is not."
+    },
+    {
+      "id": "CHILD-ENC-001",
+      "title": "Child SA (ESP) encryption algorithm",
+      "target": "Child SA negotiation",
+      "reads": [
+        "childSaNegotiations[].selected.encryption.id (response frames, protocol ESP)"
+      ],
+      "failWhen": "Selected algorithm is FORBIDDEN, DISCOURAGED or LEGACY in the encryption table. ENCR_NULL and ENCR_NULL_AUTH_AES_GMAC are CRITICAL (traffic is not encrypted).",
+      "notEvaluatedWhen": "coverage.childSaNegotiationVisible is false (IKE not decrypted).",
+      "severity": "FROM_TABLE",
+      "reference": "RFC 8221 (ESP requirements); RFC 9395",
+      "recommendation": "Use ENCR_AES_GCM_16 or ENCR_CHACHA20_POLY1305 for ESP."
+    },
+    {
+      "id": "CHILD-INT-001",
+      "title": "Child SA (ESP) integrity",
+      "target": "Child SA negotiation",
+      "reads": [
+        "childSaNegotiations[].selected.integrity",
+        "childSaNegotiations[].selected.encryption (aead flag)"
+      ],
+      "failWhen": "Cipher is not AEAD and integrity is null or NONE (CRITICAL), or the integrity algorithm is FORBIDDEN or LEGACY in the integrity table.",
+      "notEvaluatedWhen": "coverage.childSaNegotiationVisible is false.",
+      "severity": "FROM_TABLE",
+      "reference": "RFC 8221 section 4 (encryption without authentication MUST NOT be used)",
+      "recommendation": "Use an AEAD cipher, or pair the cipher with AUTH_HMAC_SHA2_256_128 or AUTH_HMAC_SHA2_512_256."
+    },
+    {
+      "id": "CHILD-PFS-001",
+      "title": "Perfect forward secrecy on child SA rekey",
+      "target": "Child SA negotiation",
+      "reads": [
+        "pfs.determinable",
+        "pfs.enabled"
+      ],
+      "failWhen": "pfs.determinable is true and pfs.enabled is false.",
+      "notEvaluatedWhen": "pfs.determinable is false (no decrypted CREATE_CHILD_SA seen).",
+      "severity": "MEDIUM",
+      "reference": "Project policy (common hardening guidance; not an RFC requirement)",
+      "recommendation": "Add a DH group to the child (ESP) proposal so every rekey performs a fresh key exchange."
+    },
+    {
+      "id": "CHILD-DH-001",
+      "title": "Child SA PFS Diffie-Hellman group",
+      "target": "Child SA negotiation",
+      "reads": [
+        "childSaNegotiations[].selected.dhGroup.id (CREATE_CHILD_SA responses)"
+      ],
+      "failWhen": "Selected group is FORBIDDEN, DISCOURAGED or LEGACY in the DH table.",
+      "notEvaluatedWhen": "No decrypted CREATE_CHILD_SA response has a DH group (also covers PFS being off: CHILD-PFS-001 reports that).",
+      "severity": "FROM_TABLE",
+      "reference": "RFC 8247 section 2.4",
+      "recommendation": "Use group 14 at minimum; prefer group 19, 20, 31 or 15 and larger."
+    },
+    {
+      "id": "LIFE-001",
+      "title": "Child SA rekey interval",
+      "target": "ESP tunnel pair",
+      "reads": [
+        "lifetime.observedRekeyIntervals[].intervalSeconds",
+        "lifetime.observedRekeyIntervals[].lowerBoundOnly"
+      ],
+      "failWhen": "intervalSeconds is greater than thresholds.maxChildRekeySeconds. This is a definite FAIL even when lowerBoundOnly is true, because the real interval is at least that long.",
+      "notEvaluatedWhen": "No rekey interval was observed; or lowerBoundOnly is true and the interval is within the threshold (the real value may exceed it).",
+      "severity": "LOW",
+      "reference": "Project policy (IKEv2 does not carry lifetimes on the wire, so only observed rekey intervals are used)",
+      "recommendation": "Shorten the child SA lifetime, or add a volume (bytes/packets) limit, so keys are replaced regularly.",
+      "passNote": "PASS needs a complete interval (lowerBoundOnly false) within the threshold."
+    }
+  ]
+}

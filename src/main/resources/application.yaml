@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: sih
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+pcap:
+  upload-dir: /home/devxraj/pcap-uploads
+  analyzer-script: /home/devxraj/python/analyze_pcap.py
+  analyzer-timeout-seconds: 60
+
+
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+
